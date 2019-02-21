@@ -17,4 +17,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }
+
