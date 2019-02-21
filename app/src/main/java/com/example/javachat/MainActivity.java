@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
             Log.i("Simon", "onCreate: ");
+            
         }
     }
 
