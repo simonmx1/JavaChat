@@ -19,4 +19,11 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Simon", "onCreate: ");
         }
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }
+
