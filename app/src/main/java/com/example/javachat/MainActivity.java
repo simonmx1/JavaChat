@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Socket client = null;
         try {
-            client = new Socket("Client", PORT);
+            client = new Socket("localhost", PORT);
             BufferedReader in =
                     new BufferedReader( new InputStreamReader(client.getInputStream()));
             PrintStream out = new PrintStream(client.getOutputStream());
