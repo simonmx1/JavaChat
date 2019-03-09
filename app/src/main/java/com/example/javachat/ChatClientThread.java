@@ -10,6 +10,8 @@ public class ChatClientThread extends Thread
 
 	//Ausgabefeld:
 	private out area;
+	//Chatverlauf:
+    private verlauf scrollPane;
 
 	public ChatClientThread(BufferedReader in) {
 		this.in = in;
