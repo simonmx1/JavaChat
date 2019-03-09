@@ -7,7 +7,7 @@ import java.net.SocketException;
 public class ChatClientThread extends Thread
 {
 	private BufferedReader in = null;
-
+/*
 	//Ausgabefeld:
 	private out area;
 	//Chatverlauf:
@@ -37,6 +37,8 @@ public class ChatClientThread extends Thread
 		} catch (IOException e) {
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 		}
+
 	}
+	*/
 }
 

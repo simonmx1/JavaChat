@@ -24,7 +24,7 @@ public class ChatClient
 			// sending the name of the client to the server
 			out.println("Client");
 			
-			new ChatClientThread(in).start();
+			//new ChatClientThread(in).start();
 			
 			while (true) {
 				String line = consoleIn.readLine();

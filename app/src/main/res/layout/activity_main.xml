@@ -10,18 +10,20 @@
         android:id="@+id/b_host"
         android:layout_width="300dp"
         android:layout_height="150dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorPrimaryDark"
         android:text="Host Server"
         android:textColor="@android:color/white"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="388dp" />
+        app:layout_constraintTop_toBottomOf="@+id/b_client" />
 
     <Button
         android:id="@+id/b_client"
         android:layout_width="300dp"
         android:layout_height="149dp"
+        android:layout_marginTop="100dp"
         android:background="@color/colorPrimaryDark"
         android:text="Host Client"
         android:textAllCaps="true"
@@ -29,6 +31,6 @@
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="212dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

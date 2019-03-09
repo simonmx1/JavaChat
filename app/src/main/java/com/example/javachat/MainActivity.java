@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
         Socket client = null;
         try {
             client = new Socket("localhost", PORT);
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             try { client.close(); } catch (Exception e1) { ; }
         }
+        */
+
+
+
     }
 }
 
