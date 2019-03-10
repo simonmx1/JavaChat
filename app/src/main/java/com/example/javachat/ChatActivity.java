@@ -19,11 +19,17 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<Text> chat = new ArrayList<>();
     private ImageView b_send;
     private TextView field;
+    private String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        if(getIntent().hasExtra("user")){
+            user = getIntent().getStringExtra("user");
+        }
+
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         addText();
@@ -37,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!field.getText().toString().matches("")) {
-                    chat.add(new Text(field.getText().toString(), "You", true));
+                    chat.add(new Text(field.getText().toString(), user, true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);

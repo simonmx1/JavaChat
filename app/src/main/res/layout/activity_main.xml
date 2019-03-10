@@ -7,29 +7,30 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/b_host"
+        android:id="@+id/m_join"
         android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="24dp"
         android:background="@color/colorPrimaryDark"
-        android:text="Host Server"
-        android:textColor="@android:color/white"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b_client" />
-
-    <Button
-        android:id="@+id/b_client"
-        android:layout_width="300dp"
-        android:layout_height="149dp"
-        android:layout_marginTop="100dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Host Client"
+        android:text="Join Chat"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_user" />
+
+    <EditText
+        android:id="@+id/m_user"
+        android:layout_width="300dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="104dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
