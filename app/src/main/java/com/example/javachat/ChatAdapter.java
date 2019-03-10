@@ -55,6 +55,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             //Log.i("", "onBindViewHolder: " + t.getUser()+ " is You!!");
             holder.user.setGravity(Gravity.RIGHT);
             holder.text.setGravity(Gravity.RIGHT);
+        }else{
+            holder.user.setGravity(Gravity.LEFT);
+            holder.text.setGravity(Gravity.LEFT);
         }
         holder.user.setText(t.getUser());
         holder.text.setText(t.getContent());
