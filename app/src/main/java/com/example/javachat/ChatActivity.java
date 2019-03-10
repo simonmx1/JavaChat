@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView b_send;
     private TextView field;
     private String user;
+    private String ip = "localhost";
 
     private BufferedReader in, consoleIn;
     private PrintStream out;
@@ -65,15 +67,16 @@ public class ChatActivity extends AppCompatActivity {
 
         Socket client = null;
         try {
-            client = new Socket("localhost", 35565);
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintStream(client.getOutputStream());
-            consoleIn = new BufferedReader(new InputStreamReader(System.in));
+            InetAddress ipAd = InetAddress.getByName(this.ip);
+            client = new Socket(ipAd, 35565);
+            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            this.out = new PrintStream(client.getOutputStream());
+            this.consoleIn = new BufferedReader(new InputStreamReader(System.in));
             // sending the name of the client to the server
-            out.println(user);
-            new ChatClientThread(in, chat).start();
+            this.out.println(this.user);
+            new ChatClientThread(this.in, this.chat).start();
         } catch (IOException e) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            Log.i("", e.getClass().getName() + ": " + e.getMessage());
         }
 
     }

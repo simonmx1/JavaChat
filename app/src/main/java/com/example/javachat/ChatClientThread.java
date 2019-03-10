@@ -2,7 +2,6 @@ package com.example.javachat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.util.ArrayList;
 
