@@ -21,13 +21,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     public ChatAdapter(Context context, ArrayList<Text> chat) {
         this.context = context;
         this.chat = chat;
-
     }
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        public static TextView text;
-        public static TextView user;
+        public TextView text;
+        public TextView user;
 
         public MyViewHolder(View v) {
             super(v);
@@ -37,9 +36,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
 
 
     }
-
-
-
 
 
     public ChatAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,13 +48,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
-        Log.d(" ","called");
-        if(chat.get(i).isYou()){
-            MyViewHolder.user.setGravity(Gravity.RIGHT);
-            MyViewHolder.text.setGravity(Gravity.RIGHT);
+        //Log.d(" ","called");
+        Text t = chat.get(i);
+
+        if(t.isYou()){
+            //Log.i("", "onBindViewHolder: " + t.getUser()+ " is You!!");
+            holder.user.setGravity(Gravity.RIGHT);
+            holder.text.setGravity(Gravity.RIGHT);
         }
-        MyViewHolder.user.setText(chat.get(i).getUser());
-        MyViewHolder.text.setText(chat.get(i).getContent());
+        holder.user.setText(t.getUser());
+        holder.text.setText(t.getContent());
     }
 
     @Override

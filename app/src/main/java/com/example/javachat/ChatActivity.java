@@ -41,6 +41,7 @@ public class ChatActivity extends AppCompatActivity {
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
+
                 }else{
                     Log.i("", "false");
                 }
@@ -48,7 +49,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void setRecyclerView(){
         view = findViewById(R.id.c_view);
@@ -62,7 +62,6 @@ public class ChatActivity extends AppCompatActivity {
         view.setAdapter(adapter);
     }
 
-
     private void addText(){
 
         chat.add(new Text("this is a test", "simons", false));
@@ -70,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         chat.add(new Text("this is a test lol", "you", true));
         chat.add(new Text("this is a test", "felix", false));
     }
+
 
 
 }
