@@ -7,7 +7,7 @@ import java.net.SocketException;
 public class ChatClientThread extends Thread
 {
 	private BufferedReader in = null;
-/*
+
 	//Ausgabefeld:
 	private out area;
 	//Chatverlauf:
@@ -39,6 +39,5 @@ public class ChatClientThread extends Thread
 		}
 
 	}
-	*/
 }
 
