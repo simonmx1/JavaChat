@@ -26,6 +26,9 @@ public class ChatActivity extends AppCompatActivity {
     private TextView field;
     private String user;
 
+    private BufferedReader in, consoleIn;
+    private PrintStream out;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,32 +65,15 @@ public class ChatActivity extends AppCompatActivity {
 
         Socket client = null;
         try {
-            client = new Socket("localhost", 65535);
-            BufferedReader in =
-                    new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintStream out = new PrintStream(client.getOutputStream());
-            BufferedReader consoleIn =
-                    new BufferedReader(new InputStreamReader(System.in));
-
+            client = new Socket("localhost", 35565);
+            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            out = new PrintStream(client.getOutputStream());
+            consoleIn = new BufferedReader(new InputStreamReader(System.in));
             // sending the name of the client to the server
-            out.println("Client");
-
-            //new ChatClientThread(in).start();
-
-            while (true) {
-                String line = consoleIn.readLine();
-                if (line == null)
-                    // pressed [Ctrl]+Z to sign out
-                    break;
-                out.println(line);
-            }
+            out.println(user);
+            new ChatClientThread(in, chat).start();
         } catch (IOException e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
-        } finally {
-            try {
-                client.close();
-            } catch (Exception e1) {
-            }
         }
 
     }
