@@ -50,13 +50,15 @@ public class ChatActivity extends AppCompatActivity {
         b_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!field.getText().toString().matches("")) {
+                String cont = field.getText().toString().trim();
+                if(!cont.matches("")) {
                     chat.add(new Text(field.getText().toString(), user, true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
 
                 }else{
+                    field.setText("");
                     Log.i("", "false");
                 }
             }
@@ -72,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
             // sending the name of the client to the server
             out.println(user);
             new ChatClientThread(in, chat).start();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
         }
 
