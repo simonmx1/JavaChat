@@ -20,7 +20,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh{
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -95,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
                     Log.i("", "user send: " + user);
                     out.println(user);
 
-                    new ChatClientThread(in, out, chat).start();
+                    new ChatClientThread(in, out, chat, ChatActivity.this).start();
                 } catch (IOException e) {
                     Log.i("", e.getClass().getName() + ": " + e.getMessage());
                 }
@@ -135,4 +135,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onSend() {
+        adapter.notifyItemInserted(chat.size());
+        //view.scrollToPosition(chat.size() - 1);
+    }
 }
