@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -30,6 +31,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private BufferedReader in, consoleIn;
     private PrintStream out;
+    private Thread t;
+    private Socket client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +81,25 @@ public class ChatActivity extends AppCompatActivity {
                     // sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
+                    new ChatClientThread(in, chat).start();
+
                     new ChatClientThread(in, out, chat).start();
                 } catch (IOException e) {
-                    Log.i(" ", e.getClass().getName() + ": " + e.getMessage());
+                    Log.i("", e.getClass().getName() + ": " + e.getMessage());
                 }
             }
-        }.start();
+        };
+        t.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        super.onBackPressed();
     }
 
     private void setRecyclerView() {
