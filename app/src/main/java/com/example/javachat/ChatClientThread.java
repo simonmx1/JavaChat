@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class ChatClientThread extends Thread
 {
+
 	private BufferedReader in = null;
 
 	//Ausgabefeld:
@@ -42,5 +43,6 @@ public class ChatClientThread extends Thread
 		}
 
 	}
+
 }
 
