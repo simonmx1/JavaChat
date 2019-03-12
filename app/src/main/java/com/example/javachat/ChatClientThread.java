@@ -17,11 +17,13 @@ public class ChatClientThread extends Thread
 	//Ausgabefeld:
 	private ArrayList chat;
 	private PrintStream out;
+	private Refresh r;
 
-	ChatClientThread(BufferedReader in, PrintStream out, ArrayList<Text> chat) {
+	ChatClientThread(BufferedReader in, PrintStream out, ArrayList<Text> chat, Refresh r) {
 		this.in = in;
 		this.out = out;
 		this.chat = chat;
+		this.r = r;
 	}
 
 	@Override
@@ -34,13 +36,18 @@ public class ChatClientThread extends Thread
 				System.out.println(line);
 					msg = line;
 					chat.add(new Text(msg, user, false));
+					r.onSend();
+
 			}
 		} catch (SocketException e) {
 			System.out.println("Connection to ChatServer lost, ignore exception");
 		} catch (IOException e) {
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 		}
+	}
 
+	public interface Refresh{
+		void onSend();
 	}
 
 }
