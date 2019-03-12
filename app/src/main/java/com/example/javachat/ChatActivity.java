@@ -34,6 +34,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Thread t;
     private Socket client;
 
+
+    public static final String IP = "10.0.2.2";
     public static final int PORT = 65535;
 
     @Override
@@ -47,7 +49,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        addText();
+        //addText();
         setRecyclerView();
 
 
@@ -66,7 +68,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     new Thread(){
                         @Override
                         public void run() {
-                            out.println(cont+user);
+                            out.println(cont);
                         }
                     }.start();
 
@@ -80,12 +82,14 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             @Override
             public void run() {
                 try {
-                    InetAddress ip = Inet4Address.getByName("192.168.1.184");
+                    InetAddress ip = Inet4Address.getByName(IP);
                     try {
                         client = new Socket(ip, PORT);
                     }catch (Exception e){
                         try{client = new Socket("localhost", PORT);
-                        }catch (Exception ex){}
+                        }catch (Exception ex){
+                            Log.i("", "run: connection failed");
+                        }
                     }
 
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -127,7 +131,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     }
 
     private void addText() {
-
         chat.add(new Text("this is a test", "simons", false));
         chat.add(new Text("this is not a test", "simons", false));
         chat.add(new Text("this is a test lol", "you", true));
