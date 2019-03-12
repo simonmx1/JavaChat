@@ -18,12 +18,14 @@ public class ChatClientThread extends Thread
 	private ArrayList chat;
 	private PrintStream out;
 	private Refresh r;
+	private Users u;
 
-	ChatClientThread(BufferedReader in, PrintStream out, ArrayList<Text> chat, Refresh r) {
+	ChatClientThread(BufferedReader in, PrintStream out, ArrayList<Text> chat, Refresh r, Users u) {
 		this.in = in;
 		this.out = out;
 		this.chat = chat;
 		this.r = r;
+		this.u = u;
 	}
 
 	@Override
@@ -50,6 +52,10 @@ public class ChatClientThread extends Thread
 
 	public interface Refresh{
 		void onSend();
+	}
+
+	public interface Users{
+		void onChange(int size);
 	}
 
 }

@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,7 +22,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh{
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users{
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -33,6 +35,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private PrintStream out;
     private Thread t;
     private Socket client;
+    private TextView users;
 
 
     public static final String IP = "10.0.2.2";
@@ -42,6 +45,12 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        users = findViewById(R.id.useres);
+        users.setText(1 + " Users connected");
+        users.setGravity(Gravity.RIGHT);
+
+
 
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
@@ -99,7 +108,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     Log.i("", "user send: " + user);
                     out.println(user);
 
-                    new ChatClientThread(in, out, chat, ChatActivity.this).start();
+                    new ChatClientThread(in, out, chat, ChatActivity.this, ChatActivity.this).start();
                 } catch (IOException e) {
                     Log.i("", e.getClass().getName() + ": " + e.getMessage());
                 }
@@ -142,5 +151,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     public void onSend() {
         adapter.notifyItemInserted(chat.size());
         //view.scrollToPosition(chat.size() - 1);
+    }
+
+    @Override
+    public void onChange(int size) {
+        users.setText(size + " Users connected");
     }
 }
