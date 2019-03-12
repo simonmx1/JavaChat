@@ -176,12 +176,22 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     @Override
     public void onSend() {
-        adapter.notifyItemInserted(chat.size());
-        //view.scrollToPosition(chat.size() - 1);
+        runOnUiThread(new Runnable(){
+            public void run() {
+                adapter.notifyItemInserted(chat.size());
+                view.scrollToPosition(chat.size() - 1);
+            }
+        });
+
     }
 
     @Override
-    public void onChange(int size) {
-        users.setText(size + " Users connected");
+    public void onChange(final int size) {
+        runOnUiThread(new Runnable(){
+            public void run() {
+                users.setText(size + " Users connected");
+            }
+        });
+
     }
 }
