@@ -36,11 +36,22 @@ public class ChatClientThread extends Thread
 			while (true) {
 				String line = in.readLine();
 				System.out.println(line);
-				if (line.indexOf(':') != -1)
-					user = line.substring(0, line.indexOf(':'));
-				msg = line.substring(line.indexOf(':')+1);
-				chat.add(new Text(msg, user, false));
-				r.onSend();
+
+				if (!Character.isAlphabetic(line.charAt(0))) {
+
+					user = "Server Message";
+					msg = line.substring(line.indexOf(':') + 1);
+					u.onChange(Integer.parseInt(line.substring(0, line.indexOf(':'))));
+
+				} else {
+					//if message
+					if (line.indexOf(':') != -1)
+						user = line.substring(0, line.indexOf(':'));
+					msg = line.substring(line.indexOf(':') + 1);
+				}
+					chat.add(new Text(msg, user, false));
+					r.onSend();
+
 
 			}
 		} catch (SocketException e) {
