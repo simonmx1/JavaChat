@@ -74,11 +74,11 @@ public class ChatActivity extends AppCompatActivity {
                     client = new Socket(ip, 65535);
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
-                    consoleIn = new BufferedReader(new InputStreamReader(System.in));
+                    //consoleIn = new BufferedReader(new InputStreamReader(System.in));
                     // sending the name of the client to the server
-                    Log.i("", "user send: "+user);
+                    Log.i("", "user send: " + user);
                     out.println(user);
-                    new ChatClientThread(in, chat).start();
+                    new ChatClientThread(in, out, chat).start();
                 } catch (IOException e) {
                     Log.i(" ", e.getClass().getName() + ": " + e.getMessage());
                 }
