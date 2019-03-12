@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -68,15 +70,17 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    client = new Socket("localhost", 35565);
+                    InetAddress ip = Inet4Address.getByName("10.0.2.2");
+                    client = new Socket(ip, 65535);
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
                     consoleIn = new BufferedReader(new InputStreamReader(System.in));
                     // sending the name of the client to the server
+                    Log.i("", "user send: "+user);
                     out.println(user);
                     new ChatClientThread(in, chat).start();
                 } catch (IOException e) {
-                    System.out.println(e.getClass().getName() + ": " + e.getMessage());
+                    Log.i(" ", e.getClass().getName() + ": " + e.getMessage());
                 }
             }
         }.start();
