@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.util.ArrayList;
 
@@ -13,19 +12,20 @@ public class ChatClientThread extends Thread
 {
 
 	private BufferedReader in = null;
-
+	private String user;
 	//Ausgabefeld:
 	private ArrayList chat;
-	private PrintStream out;
+	//private PrintStream out;
 	private Refresh r;
 	private Users u;
 
-	ChatClientThread(BufferedReader in, PrintStream out, ArrayList<Text> chat, Refresh r, Users u) {
+	ChatClientThread(String user, BufferedReader in, ArrayList<Text> chat, Refresh r, Users u) {
 		this.in = in;
-		this.out = out;
+		//this.out = out;
 		this.chat = chat;
 		this.r = r;
 		this.u = u;
+		this.user = user;
 	}
 
 	@Override
@@ -49,7 +49,8 @@ public class ChatClientThread extends Thread
 						user = line.substring(0, line.indexOf(':'));
 					msg = line.substring(line.indexOf(':') + 1);
 				}
-					chat.add(new Text(msg, user, false));
+					if (!this.user.equals(user))
+						chat.add(new Text(msg, user, false));
 					r.onSend();
 
 
