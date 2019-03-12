@@ -25,12 +25,25 @@
         android:id="@+id/m_user"
         android:layout_width="300dp"
         android:layout_height="61dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_ip" />
+
+    <EditText
+        android:id="@+id/m_ip"
+        android:layout_width="300dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:hint="IP-Address"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

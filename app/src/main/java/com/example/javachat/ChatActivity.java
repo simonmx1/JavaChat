@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client;
     private TextView users;
 
-    public static final String IP = "10.0.2.2";
+    public String ip = "10.0.2.2";
     //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
 
@@ -55,6 +55,9 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
+        }else{finish();}
+        if (getIntent().hasExtra("ip")) {
+            ip = getIntent().getStringExtra("ip");
         }
 
 
@@ -91,14 +94,16 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             @Override
             public void run() {
                 try {
-                    InetAddress ip = Inet4Address.getByName(IP);
+                    InetAddress ipa = Inet4Address.getByName(ip);
                     try {
-                        client = new Socket(ip, PORT);
+                        client = new Socket(ipa, PORT);
                     } catch (Exception e) {
                         try {
+                            Toast.makeText(getApplicationContext(), "Trying Localhost!", Toast.LENGTH_LONG);
                             client = new Socket("localhost", PORT);
                         } catch (Exception ex) {
                             Log.i("", "run: connection failed");
+                            Toast.makeText(getApplicationContext(), "Connection failed!", Toast.LENGTH_LONG);
                         }
                     }
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
