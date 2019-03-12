@@ -81,7 +81,6 @@ public class ChatActivity extends AppCompatActivity {
                     // sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
-                    new ChatClientThread(in, chat).start();
 
                     new ChatClientThread(in, out, chat).start();
                 } catch (IOException e) {
