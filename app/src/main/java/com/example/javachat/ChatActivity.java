@@ -38,8 +38,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client;
     private TextView users;
 
-
-    public static final String IP = "192.168.1.184";
+    public static final String IP = "10.0.2.2";
+    //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
 
     @Override
