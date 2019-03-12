@@ -13,7 +13,9 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.PrintStream;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -26,17 +28,18 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView b_send;
     private TextView field;
     private String user;
-    private String ip = "localhost";
 
     private BufferedReader in, consoleIn;
     private PrintStream out;
+    private Thread t;
+    private Socket client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        if(getIntent().hasExtra("user")){
+        if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
         }
 
@@ -52,36 +55,53 @@ public class ChatActivity extends AppCompatActivity {
         b_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!field.getText().toString().matches("")) {
+                if (!field.getText().toString().matches("")) {
                     chat.add(new Text(field.getText().toString(), user, true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
 
-                }else{
+                } else {
                     Log.i("", "false");
                 }
             }
         });
 
+        new Thread() {
+            Socket client = null;
 
-        Socket client = null;
-        try {
-            InetAddress ipAd = InetAddress.getByName(this.ip);
-            client = new Socket(ipAd, 35565);
-            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            this.out = new PrintStream(client.getOutputStream());
-            this.consoleIn = new BufferedReader(new InputStreamReader(System.in));
-            // sending the name of the client to the server
-            this.out.println(this.user);
-            new ChatClientThread(this.in, this.chat).start();
-        } catch (IOException e) {
-            Log.i("", e.getClass().getName() + ": " + e.getMessage());
-        }
+            @Override
+            public void run() {
+                try {
+                    InetAddress ip = Inet4Address.getByName("10.0.2.2");
+                    client = new Socket(ip, 65535);
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    out = new PrintStream(client.getOutputStream());
+                    //consoleIn = new BufferedReader(new InputStreamReader(System.in));
+                    // sending the name of the client to the server
+                    Log.i("", "user send: " + user);
+                    out.println(user);
 
+                    new ChatClientThread(in, out, chat).start();
+                } catch (IOException e) {
+                    Log.i("", e.getClass().getName() + ": " + e.getMessage());
+                }
+            }
+        };
+        t.start();
     }
 
-    private void setRecyclerView(){
+    @Override
+    public void onBackPressed() {
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        super.onBackPressed();
+    }
+
+    private void setRecyclerView() {
         view = findViewById(R.id.c_view);
 
         view.setHasFixedSize(true);
@@ -93,14 +113,13 @@ public class ChatActivity extends AppCompatActivity {
         view.setAdapter(adapter);
     }
 
-    private void addText(){
+    private void addText() {
 
         chat.add(new Text("this is a test", "simons", false));
         chat.add(new Text("this is not a test", "simons", false));
         chat.add(new Text("this is a test lol", "you", true));
         chat.add(new Text("this is a test", "felix", false));
     }
-
 
 
 }
