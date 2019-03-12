@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    InetAddress ip = Inet4Address.getByName("10.0.2.2");
+                    InetAddress ip = Inet4Address.getByName("192.168.1.184");
                     try {
                         client = new Socket(ip, PORT);
                     }catch (Exception e){
