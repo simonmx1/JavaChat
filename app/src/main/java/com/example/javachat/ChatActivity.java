@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void onClick(View v) {
                 final String cont = field.getText().toString().trim();
                 if (!cont.matches("")) {
-                    chat.add(new Text(cont , user, true));
+                    chat.add(new Text(cont , "you", true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
