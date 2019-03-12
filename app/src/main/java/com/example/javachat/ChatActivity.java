@@ -29,10 +29,12 @@ public class ChatActivity extends AppCompatActivity {
     private TextView field;
     private String user;
 
-    private BufferedReader in, consoleIn;
+    private BufferedReader in;
     private PrintStream out;
     private Thread t;
     private Socket client;
+
+    public static final int PORT = 65535;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +57,37 @@ public class ChatActivity extends AppCompatActivity {
         b_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!field.getText().toString().matches("")) {
-                    chat.add(new Text(field.getText().toString(), user, true));
+                final String cont = field.getText().toString().trim();
+                if (!cont.matches("")) {
+                    chat.add(new Text(cont , user, true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            out.println(cont+user);
+                        }
+                    }.start();
+
 
                 } else {
                     Log.i("", "false");
                 }
             }
         });
-
-        new Thread() {
-            Socket client = null;
-
+        t = new Thread() {
             @Override
             public void run() {
                 try {
                     InetAddress ip = Inet4Address.getByName("10.0.2.2");
-                    client = new Socket(ip, 65535);
+                    try {
+                        client = new Socket(ip, PORT);
+                    }catch (Exception e){
+                        try{client = new Socket("localhost", PORT);
+                        }catch (Exception ex){}
+                    }
+
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
                     //consoleIn = new BufferedReader(new InputStreamReader(System.in));
