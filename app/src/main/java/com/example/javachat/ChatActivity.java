@@ -34,7 +34,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        if(getIntent().hasExtra("user")){
+        if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
         }
 
@@ -50,35 +50,39 @@ public class ChatActivity extends AppCompatActivity {
         b_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!field.getText().toString().matches("")) {
+                if (!field.getText().toString().matches("")) {
                     chat.add(new Text(field.getText().toString(), user, true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
 
-                }else{
+                } else {
                     Log.i("", "false");
                 }
             }
         });
 
+        new Thread() {
+            Socket client = null;
 
-        Socket client = null;
-        try {
-            client = new Socket("localhost", 35565);
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintStream(client.getOutputStream());
-            consoleIn = new BufferedReader(new InputStreamReader(System.in));
-            // sending the name of the client to the server
-            out.println(user);
-            new ChatClientThread(in, chat).start();
-        } catch (IOException e) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-
+            @Override
+            public void run() {
+                try {
+                    client = new Socket("localhost", 35565);
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    out = new PrintStream(client.getOutputStream());
+                    consoleIn = new BufferedReader(new InputStreamReader(System.in));
+                    // sending the name of the client to the server
+                    out.println(user);
+                    new ChatClientThread(in, chat).start();
+                } catch (IOException e) {
+                    System.out.println(e.getClass().getName() + ": " + e.getMessage());
+                }
+            }
+        }.start();
     }
 
-    private void setRecyclerView(){
+    private void setRecyclerView() {
         view = findViewById(R.id.c_view);
 
         view.setHasFixedSize(true);
@@ -90,14 +94,13 @@ public class ChatActivity extends AppCompatActivity {
         view.setAdapter(adapter);
     }
 
-    private void addText(){
+    private void addText() {
 
         chat.add(new Text("this is a test", "simons", false));
         chat.add(new Text("this is not a test", "simons", false));
         chat.add(new Text("this is a test lol", "you", true));
         chat.add(new Text("this is a test", "felix", false));
     }
-
 
 
 }
