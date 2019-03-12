@@ -34,6 +34,9 @@ public class ChatClientThread extends Thread
 			while (true) {
 				String line = in.readLine();
 				System.out.println(line);
+				user = line.substring(0, line.indexOf(':'));
+				msg = line.substring(line.indexOf(':')+1);
+				chat.add(new Text(msg, user, false));
 					msg = line;
 					chat.add(new Text(msg, user, false));
 					r.onSend();
