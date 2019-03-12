@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private TextView users;
 
 
-    public static final String IP = "10.0.2.2";
+    public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
 
     @Override
@@ -81,7 +82,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         }
                     }.start();
 
-
                 } else {
                     Log.i("", "false");
                 }
@@ -94,19 +94,40 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     InetAddress ip = Inet4Address.getByName(IP);
                     try {
                         client = new Socket(ip, PORT);
-                    }catch (Exception e){
-                        try{client = new Socket("localhost", PORT);
-                        }catch (Exception ex){
+                    } catch (Exception e) {
+                        try {
+                            client = new Socket("localhost", PORT);
+                        } catch (Exception ex) {
                             Log.i("", "run: connection failed");
                         }
                     }
-
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
                     //consoleIn = new BufferedReader(new InputStreamReader(System.in));
                     // sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
+
+                    if (in.readLine().equals("NAME_USED"))
+                        try {
+                            client.close();
+                            ChatActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Username unavailable", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            finish();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            ChatActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Username unavailable", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            finish();
+                        }
 
                     new ChatClientThread(in, out, chat, ChatActivity.this, ChatActivity.this).start();
                 } catch (IOException e) {
@@ -139,6 +160,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         view.setAdapter(adapter);
     }
 
+    @Deprecated
     private void addText() {
         chat.add(new Text("this is a test", "simons", false));
         chat.add(new Text("this is not a test", "simons", false));
