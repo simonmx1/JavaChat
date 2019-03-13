@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         notifManager = NotificationManagerCompat.from(this);
 
 
-        users = findViewById(R.id.t_useres);
+        users = findViewById(R.id.t_users);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
 
