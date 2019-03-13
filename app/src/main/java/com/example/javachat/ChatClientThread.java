@@ -49,9 +49,13 @@ public class ChatClientThread extends Thread
 						user = line.substring(0, line.indexOf(':'));
 					msg = line.substring(line.indexOf(':') + 1);
 				}
-					if (!this.user.equals(user))
-						chat.add(new Text(msg, user, false));
-					r.onSend();
+
+
+				if (!this.user.equals(user)) {
+					Text text = new Text(msg, user, false);
+					chat.add(text);
+					r.onSend(text);
+				}
 
 
 			}
@@ -63,7 +67,7 @@ public class ChatClientThread extends Thread
 	}
 
 	public interface Refresh{
-		void onSend();
+		void onSend(Text text);
 	}
 
 	public interface Users{
