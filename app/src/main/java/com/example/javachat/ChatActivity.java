@@ -201,7 +201,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void run() {
                 adapter.notifyItemInserted(chat.size());
                 view.scrollToPosition(chat.size() - 1);
-                sendNotif(text);
+                if(!App.isActivityVisible())
+                    sendNotif(text);
             }
         });
 
@@ -224,4 +225,19 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                 .build();
         notifManager.notify(1, notif);
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        App.activityResumed();
+        notifManager.cancelAll();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        App.activityPaused();
+    }
+
 }
