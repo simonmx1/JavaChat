@@ -7,7 +7,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -68,18 +66,19 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
-        }else{finish();}
+        } else {
+            finish();
+        }
         if (getIntent().hasExtra("ip")) {
             ip = getIntent().getStringExtra("ip");
         }
 
         //set user in toolbar
-        TextView t_user = findViewById(R.id.t_user);
+        TextView t_user = findViewById(R.id.t_users);
         t_user.setText(user);
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        //addText();
         setRecyclerView();
 
 
@@ -91,11 +90,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void onClick(View v) {
                 final String cont = field.getText().toString().trim();
                 if (!cont.matches("")) {
-                    chat.add(new Text(cont , "you", true));
+                    chat.add(new Text(cont, "you", true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             out.println(cont);
@@ -134,12 +133,14 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     }
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
-                    //consoleIn = new BufferedReader(new InputStreamReader(System.in));
-                    // sending the name of the client to the server
+                    //sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
 
-                    if (in.readLine().equals("NAME_USED"))
+                    String firstMSG = in.readLine();
+
+                    //check for Username
+                    if (firstMSG.equals("NAME_USED")) {
                         try {
                             client.close();
                         } catch (IOException e) {
@@ -154,6 +155,12 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             });
                             finish();
                         }
+                    }
+
+                    //get number of Users
+                    if (firstMSG.startsWith("SERVER_INF:")) {
+                        onChange(Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1)));
+                    }
 
                     new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this)
                             .start();
@@ -211,7 +218,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     @Override
     public void onChange(final int size) {
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             public void run() {
                 users.setText(size + " Users connected");
             }
