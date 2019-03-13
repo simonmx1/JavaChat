@@ -1,6 +1,9 @@
 package com.example.javachat;
 
+import android.app.Notification;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +24,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users {
+import static com.example.javachat.App.NOTIF_CHANNEL;
+
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users{
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -36,6 +41,9 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client;
     private TextView users;
 
+    private NotificationManagerCompat notifManager;
+
+
     public String ip = "10.0.2.2";
     //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
@@ -45,10 +53,13 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        users = findViewById(R.id.useres);
+
+        notifManager = NotificationManagerCompat.from(this);
+
+
+        users = findViewById(R.id.t_useres);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
-
 
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
@@ -58,6 +69,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         if (getIntent().hasExtra("ip")) {
             ip = getIntent().getStringExtra("ip");
         }
+
+        //set user in toolbar
+        TextView t_user = findViewById(R.id.t_user);
+        t_user.setText(user);
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -181,11 +196,12 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
     @Override
-    public void onSend() {
-        runOnUiThread(new Runnable() {
+    public void onSend(final Text text) {
+        runOnUiThread(new Runnable(){
             public void run() {
                 adapter.notifyItemInserted(chat.size());
                 view.scrollToPosition(chat.size() - 1);
+                sendNotif(text);
             }
         });
 
@@ -198,6 +214,14 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                 users.setText(size + " Users connected");
             }
         });
+    }
 
+    public void sendNotif(Text text){
+        Notification notif = new NotificationCompat.Builder(this, NOTIF_CHANNEL)
+                .setSmallIcon(R.drawable.ic_notif)
+                .setContentTitle(text.getUser())
+                .setContentText(text.getContent())
+                .build();
+        notifManager.notify(1, notif);
     }
 }
