@@ -77,7 +77,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        //addText();
         setRecyclerView();
 
 
@@ -129,8 +128,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     Log.i("", "user send: " + user);
                     out.println(user);
 
+                    String firstMSG = in.readLine();
+
                     //check for Username
-                    if (in.readLine().equals("NAME_USED")) {
+                    if (firstMSG.equals("NAME_USED")) {
                         try {
                             client.close();
                             ChatActivity.this.runOnUiThread(new Runnable() {
@@ -155,7 +156,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     }
 
                     //get number of Users
-                    if (in.readLine().substring(0, in.readLine().indexOf(':')).equals("SERVER_INF")) {
+                    if (firstMSG.startsWith("SERVER_INF:")) {
                         onChange(Integer.parseInt(in.readLine().substring(in.readLine().indexOf(':') + 1)));
                     }
 
