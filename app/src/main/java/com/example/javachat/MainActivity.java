@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +27,12 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                 if(!i.getText().toString().matches(""))
                     intent.putExtra("ip", i.getText().toString());
-                if(!u.getText().toString().matches(""))
+                if(!u.getText().toString().matches("")) {
                     intent.putExtra("user", u.getText().toString());
-                startActivity(intent);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Enter username", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

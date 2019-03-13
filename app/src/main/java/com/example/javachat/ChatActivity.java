@@ -38,6 +38,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client;
     private TextView users;
 
+
     public String ip = "10.0.2.2";
     //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
@@ -47,11 +48,9 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        users = findViewById(R.id.useres);
+        users = findViewById(R.id.t_useres);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
-
-
 
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
@@ -59,6 +58,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         if (getIntent().hasExtra("ip")) {
             ip = getIntent().getStringExtra("ip");
         }
+
+        //set user in toolbar
+        TextView t_user = findViewById(R.id.t_user);
+        t_user.setText(user);
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
