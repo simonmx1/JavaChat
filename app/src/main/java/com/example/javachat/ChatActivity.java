@@ -7,7 +7,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -74,7 +72,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         }
 
         //set user in toolbar
-        TextView t_user = findViewById(R.id.t_user);
+        TextView t_user = findViewById(R.id.t_users);
         t_user.setText(user);
 
 
@@ -127,8 +125,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     }
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
-                    //consoleIn = new BufferedReader(new InputStreamReader(System.in));
-                    // sending the name of the client to the server
+                    //sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
 
