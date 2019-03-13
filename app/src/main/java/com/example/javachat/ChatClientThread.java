@@ -46,9 +46,11 @@ public class ChatClientThread extends Thread
 
 
 				if (!this.user.equals(user)) {
-					Text text = new Text(msg, user, false);
-					chat.add(text);
-					r.onSend(text);
+					if (!(user.equals("Server Message") && msg.startsWith(this.user + ' '))) {
+						Text text = new Text(msg, user, false);
+						chat.add(text);
+						r.onSend(text);
+					}
 				}
 
 
