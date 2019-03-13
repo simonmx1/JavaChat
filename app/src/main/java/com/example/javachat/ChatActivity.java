@@ -157,7 +157,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
                     //get number of Users
                     if (firstMSG.startsWith("SERVER_INF:")) {
-                        onChange(Integer.parseInt(in.readLine().substring(in.readLine().indexOf(':') + 1)));
+                        onChange(Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1)));
                     }
 
                     new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this)
