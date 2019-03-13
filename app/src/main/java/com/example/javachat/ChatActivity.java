@@ -30,6 +30,8 @@ import static com.example.javachat.App.NOTIF_CHANNEL;
 
 public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh,
         ChatClientThread.Users{
+    public static final String TAG ="Chat";
+
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -41,7 +43,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private BufferedReader in;
     private PrintStream out;
     private Thread t;
-    private Socket client;
+    private Socket client = null;
     private TextView users;
 
     private NotificationManagerCompat notifManager;
@@ -108,20 +110,27 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         t = new Thread() {
             @Override
             public void run() {
+                Log.i(TAG, "run: start Thread");
                 try {
                     InetAddress ipa = Inet4Address.getByName(ip);
                     try {
                         client = new Socket(ipa, PORT);
                     } catch (Exception e) {
+
                         try {
-                            Toast.makeText(getApplicationContext(), "Trying Localhost!",
-                                    Toast.LENGTH_LONG);
+                            //Toast.makeText(getApplicationContext(), "Trying Localhost!",
+                                    //Toast.LENGTH_LONG);
                             client = new Socket("localhost", PORT);
+
                         } catch (Exception ex) {
-                            Log.i("", "run: connection failed");
-                            Toast.makeText(getApplicationContext(), "Connection failed!",
-                                    Toast.LENGTH_LONG);
+                            Log.i(TAG, "run: connection failed");
+                            //Toast.makeText(getApplicationContext(), "Connection failed!",
+                                    //Toast.LENGTH_LONG);
                         }
+                    }
+                    if(client == null){
+                        Log.i(TAG, "run: client null");
+                        finish();
                     }
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintStream(client.getOutputStream());
@@ -133,17 +142,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     if (in.readLine().equals("NAME_USED"))
                         try {
                             client.close();
-                            ChatActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "Username unavailable",
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-                            finish();
                         } catch (IOException e) {
                             e.printStackTrace();
-                            ChatActivity.this.runOnUiThread(new Runnable() {
+                        }finally {
+                            runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(getApplicationContext(), "Username unavailable",
@@ -156,7 +158,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this)
                             .start();
                 } catch (IOException e) {
-                    Log.i("", e.getClass().getName() + ": " + e.getMessage());
+                    Log.i("ERROR", e.getClass().getName() + ": " + e.getMessage());
                 }
             }
         };
