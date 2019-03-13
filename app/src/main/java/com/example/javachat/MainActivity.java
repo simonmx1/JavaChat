@@ -26,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                 if(!i.getText().toString().matches(""))
                     intent.putExtra("ip", i.getText().toString());
-                if(!u.getText().toString().matches(""))
+                if (!u.getText().toString().matches("")) {
                     intent.putExtra("user", u.getText().toString());
-                startActivity(intent);
+                    startActivity(intent);
+                }
             }
         });
     }

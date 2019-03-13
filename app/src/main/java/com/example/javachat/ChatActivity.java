@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -16,14 +15,13 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users{
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users {
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -52,10 +50,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         users.setGravity(Gravity.RIGHT);
 
 
-
         if (getIntent().hasExtra("user")) {
             user = getIntent().getStringExtra("user");
-        }else{finish();}
+        } else {
+            finish();
+        }
         if (getIntent().hasExtra("ip")) {
             ip = getIntent().getStringExtra("ip");
         }
@@ -74,11 +73,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void onClick(View v) {
                 final String cont = field.getText().toString().trim();
                 if (!cont.matches("")) {
-                    chat.add(new Text(cont , "you", true));
+                    chat.add(new Text(cont, "you", true));
                     field.setText("");
                     adapter.notifyItemInserted(chat.size());
                     view.scrollToPosition(chat.size() - 1);
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             out.println(cont);
@@ -113,7 +112,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                     Log.i("", "user send: " + user);
                     out.println(user);
 
-                    if (in.readLine().equals("NAME_USED"))
+                    //check for Username
+                    if (in.readLine().equals("NAME_USED")) {
                         try {
                             client.close();
                             ChatActivity.this.runOnUiThread(new Runnable() {
@@ -133,8 +133,14 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             });
                             finish();
                         }
+                    }
 
-                    new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this).start();
+                    //get number of Users
+                    if (in.readLine().substring(0, in.readLine().indexOf(':')).equals("SERVER_INF")) {
+                        onChange(Integer.parseInt(in.readLine().substring(in.readLine().indexOf(':') + 1)));
+                    }
+
+                    new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this).start();
                 } catch (IOException e) {
                     Log.i("", e.getClass().getName() + ": " + e.getMessage());
                 }
@@ -176,7 +182,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     @Override
     public void onSend() {
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             public void run() {
                 adapter.notifyItemInserted(chat.size());
                 view.scrollToPosition(chat.size() - 1);
@@ -187,7 +193,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     @Override
     public void onChange(final int size) {
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             public void run() {
                 users.setText(size + " Users connected");
             }
