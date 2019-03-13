@@ -7,6 +7,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -26,7 +28,8 @@ import java.util.ArrayList;
 
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
-public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, ChatClientThread.Users{
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh,
+        ChatClientThread.Users{
 
     private RecyclerView view;
     private ChatAdapter adapter;
@@ -57,7 +60,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         notifManager = NotificationManagerCompat.from(this);
 
 
-        users = findViewById(R.id.t_useres);
+        users = findViewById(R.id.t_users);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
 
@@ -113,11 +116,13 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         client = new Socket(ipa, PORT);
                     } catch (Exception e) {
                         try {
-                            Toast.makeText(getApplicationContext(), "Trying Localhost!", Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "Trying Localhost!",
+                                    Toast.LENGTH_LONG);
                             client = new Socket("localhost", PORT);
                         } catch (Exception ex) {
                             Log.i("", "run: connection failed");
-                            Toast.makeText(getApplicationContext(), "Connection failed!", Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "Connection failed!",
+                                    Toast.LENGTH_LONG);
                         }
                     }
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -134,7 +139,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "Username unavailable", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Username unavailable",
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                             finish();
@@ -143,7 +149,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "Username unavailable", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Username unavailable",
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                             finish();
@@ -155,7 +162,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         onChange(Integer.parseInt(in.readLine().substring(in.readLine().indexOf(':') + 1)));
                     }
 
-                    new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this).start();
+                    new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this)
+                            .start();
                 } catch (IOException e) {
                     Log.i("", e.getClass().getName() + ": " + e.getMessage());
                 }
