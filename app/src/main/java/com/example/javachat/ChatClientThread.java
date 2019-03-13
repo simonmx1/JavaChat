@@ -1,31 +1,25 @@
 package com.example.javachat;
 
-import android.support.v7.widget.RecyclerView;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 
 public class ChatClientThread extends Thread
 {
 
-	private BufferedReader in = null;
+    private BufferedReader in;
 	private String user;
-	//Ausgabefeld:
 	private ArrayList chat;
-	//private PrintStream out;
 	private Refresh r;
 	private Users u;
 
 	ChatClientThread(String user, BufferedReader in, ArrayList<Text> chat, Refresh r, Users u) {
+        this.user = user;
 		this.in = in;
-		//this.out = out;
 		this.chat = chat;
 		this.r = r;
 		this.u = u;
-		this.user = user;
 	}
 
 	@Override
