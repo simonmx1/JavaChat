@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         b_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                 if(!i.getText().toString().matches(""))
                     intent.putExtra("ip", i.getText().toString());
                 if(!u.getText().toString().matches("")) {

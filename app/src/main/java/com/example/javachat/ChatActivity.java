@@ -60,6 +60,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         notifManager = NotificationManagerCompat.from(this);
 
 
+
         users = findViewById(R.id.t_users);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
@@ -76,6 +77,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         //set user in toolbar
         TextView t_user = findViewById(R.id.t_users);
         t_user.setText(user);
+
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
