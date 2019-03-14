@@ -46,7 +46,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
     public String ip = "10.0.2.2";
-    //public static final String IP = "192.168.1.184";
+    //public String ip = "192.168.1.184";
+    //public String ip = "";
     public static final int PORT = 65535;
 
     @Override
@@ -72,7 +73,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         }
 
         //set user in toolbar
-        TextView t_user = findViewById(R.id.t_users);
+        TextView t_user = findViewById(R.id.t_user);
         t_user.setText(user);
 
 
