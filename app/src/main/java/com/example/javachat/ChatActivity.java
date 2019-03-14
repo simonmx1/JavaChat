@@ -113,13 +113,16 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                 try {
                     InetAddress ipa = Inet4Address.getByName(ip);
                     try {
+                        Log.i(TAG, "Vor Socket");
                         client = new Socket(ipa, PORT);
+                        Log.i(TAG, "Nach Socket");
                     } catch (Exception e) {
 
+                        Log.i(TAG, "run: connection failed NEW"+ e.getMessage());
                         try {
                             //Toast.makeText(getApplicationContext(), "Trying Localhost!",
                                     //Toast.LENGTH_LONG);
-                            client = new Socket("localhost", PORT);
+                           // client = new Socket("localhost", PORT);
 
                         } catch (Exception ex) {
                             Log.i(TAG, "run: connection failed");
@@ -131,8 +134,12 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         Log.i(TAG, "run: client null");
                         finish();
                     }
+                    Log.i("", "Vor in");
+
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    Log.i("", "Nach in");
                     out = new PrintStream(client.getOutputStream());
+                    Log.i("", "Nach out");
                     //sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
