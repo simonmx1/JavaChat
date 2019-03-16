@@ -47,7 +47,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private NotificationManagerCompat notifManager;
 
 
-    public String ip = "10.0.2.2";
     //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
 
@@ -69,9 +68,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             user = getIntent().getStringExtra("user");
         } else {
             finish();
-        }
-        if (getIntent().hasExtra("ip")) {
-            ip = getIntent().getStringExtra("ip");
         }
 
         //set user in toolbar
@@ -113,35 +109,18 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void run() {
                 Log.i(TAG, "run: start Thread");
                 try {
-                    InetAddress ipa = Inet4Address.getByName(ip);
-                    try {
-                        Log.i(TAG, "Vor Socket");
-                        client = new Socket(ipa, PORT);
-                        Log.i(TAG, "Nach Socket");
-                    } catch (Exception e) {
 
-                        Log.i(TAG, "run: connection failed NEW"+ e.getMessage());
-                        try {
-                            //Toast.makeText(getApplicationContext(), "Trying Localhost!",
-                                    //Toast.LENGTH_LONG);
-                           // client = new Socket("localhost", PORT);
+                    client = App.getSocket();
 
-                        } catch (Exception ex) {
-                            Log.i(TAG, "run: connection failed");
-                            //Toast.makeText(getApplicationContext(), "Connection failed!",
-                                    //Toast.LENGTH_LONG);
-                        }
-                    }
                     if(client == null){
                         Log.i(TAG, "run: client null");
                         finish();
                     }
-                    Log.i("", "Vor in");
-
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    Log.i("", "Nach in");
+
                     out = new PrintStream(client.getOutputStream());
-                    Log.i("", "Nach out");
+
+
                     //sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);
