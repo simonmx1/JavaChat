@@ -71,7 +71,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         }
 
         //set user in toolbar
-        TextView t_user = findViewById(R.id.t_users);
+        TextView t_user = findViewById(R.id.t_user);
         t_user.setText(user);
 
 
