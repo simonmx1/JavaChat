@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
 public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh,
-        ChatClientThread.Users{
-    public static final String TAG ="Chat";
+        ChatClientThread.Users {
+    public static final String TAG = "Chat";
 
 
     private RecyclerView view;
@@ -48,7 +48,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
     public String ip = "10.0.2.2";
-    //public String ip = "192.168.1.184";
+    //public String ip = "";
     //public String ip = "";
     public static final int PORT = 65535;
 
@@ -113,27 +113,29 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                 Log.i(TAG, "run: start Thread");
                 try {
                     InetAddress ipa = Inet4Address.getByName(ip);
-                    try {
-                        Log.i(TAG, "Vor Socket");
-                        client = new Socket(ipa, PORT);
-                        Log.i(TAG, "Nach Socket");
-                    } catch (Exception e) {
-
-                        Log.i(TAG, "run: connection failed NEW"+ e.getMessage());
+                    if (ipa.isReachable(1000)) {
                         try {
-                            //Toast.makeText(getApplicationContext(), "Trying Localhost!",
-                                    //Toast.LENGTH_LONG);
-                           // client = new Socket("localhost", PORT);
+                            Log.i(TAG, "Vor Socket");
+                            client = new Socket(ipa, PORT);
+                            Log.i(TAG, "Nach Socket");
+                        } catch (Exception e) {
 
-                        } catch (Exception ex) {
-                            Log.i(TAG, "run: connection failed");
-                            //Toast.makeText(getApplicationContext(), "Connection failed!",
-                                    //Toast.LENGTH_LONG);
+                            Log.i(TAG, "run: connection failed NEW" + e.getMessage());
+                            try {
+                                //Toast.makeText(getApplicationContext(), "Trying Localhost!",
+                                //Toast.LENGTH_LONG);
+                                // client = new Socket("localhost", PORT);
+
+                            } catch (Exception ex) {
+                                Log.i(TAG, "run: connection failed");
+                                //Toast.makeText(getApplicationContext(), "Connection failed!",
+                                //Toast.LENGTH_LONG);
+                            }
                         }
-                    }
-                    if(client == null){
+                    } else {
                         Log.i(TAG, "run: client null");
                         finish();
+                        interrupt();
                     }
                     Log.i("", "Vor in");
 
@@ -153,7 +155,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             client.close();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }finally {
+                        } finally {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -170,7 +172,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         onChange(Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1)));
                     }
 
-                    new ChatClientThread(user, in , chat, ChatActivity.this, ChatActivity.this)
+                    new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this)
                             .start();
                 } catch (IOException e) {
                     Log.i("ERROR", e.getClass().getName() + ": " + e.getMessage());
@@ -213,11 +215,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     @Override
     public void onSend(final Text text) {
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             public void run() {
                 adapter.notifyItemInserted(chat.size());
                 view.scrollToPosition(chat.size() - 1);
-                if(!App.isActivityVisible())
+                if (!App.isActivityVisible())
                     sendNotif(text);
             }
         });
@@ -233,7 +235,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         });
     }
 
-    public void sendNotif(Text text){
+    public void sendNotif(Text text) {
         Notification notif = new NotificationCompat.Builder(this, NOTIF_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notif)
                 .setContentTitle(text.getUser())
