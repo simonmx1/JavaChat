@@ -47,9 +47,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private NotificationManagerCompat notifManager;
 
 
-    public String ip = "10.0.2.2";
-    //public String ip = "";
-    //public String ip = "";
+    //public static final String IP = "192.168.1.184";
     public static final int PORT = 65535;
 
     @Override
@@ -61,6 +59,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         notifManager = NotificationManagerCompat.from(this);
 
 
+
         users = findViewById(R.id.t_users);
         users.setText(1 + " Users connected");
         users.setGravity(Gravity.RIGHT);
@@ -70,13 +69,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         } else {
             finish();
         }
-        if (getIntent().hasExtra("ip")) {
-            ip = getIntent().getStringExtra("ip");
-        }
 
         //set user in toolbar
         TextView t_user = findViewById(R.id.t_user);
         t_user.setText(user);
+
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -112,37 +109,18 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
             public void run() {
                 Log.i(TAG, "run: start Thread");
                 try {
-                    InetAddress ipa = Inet4Address.getByName(ip);
-                    if (ipa.isReachable(1000)) {
-                        try {
-                            Log.i(TAG, "Vor Socket");
-                            client = new Socket(ipa, PORT);
-                            Log.i(TAG, "Nach Socket");
-                        } catch (Exception e) {
 
-                            Log.i(TAG, "run: connection failed NEW" + e.getMessage());
-                            try {
-                                //Toast.makeText(getApplicationContext(), "Trying Localhost!",
-                                //Toast.LENGTH_LONG);
-                                // client = new Socket("localhost", PORT);
+                    client = App.getSocket();
 
-                            } catch (Exception ex) {
-                                Log.i(TAG, "run: connection failed");
-                                //Toast.makeText(getApplicationContext(), "Connection failed!",
-                                //Toast.LENGTH_LONG);
-                            }
-                        }
-                    } else {
+                    if(client == null){
                         Log.i(TAG, "run: client null");
                         finish();
-                        interrupt();
                     }
-                    Log.i("", "Vor in");
-
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    Log.i("", "Nach in");
+
                     out = new PrintStream(client.getOutputStream());
-                    Log.i("", "Nach out");
+
+
                     //sending the name of the client to the server
                     Log.i("", "user send: " + user);
                     out.println(user);

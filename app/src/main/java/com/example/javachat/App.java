@@ -5,10 +5,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import java.net.Socket;
+
 public class App extends Application {
 
     public static final String NOTIF_CHANNEL = "channel";
     private static boolean activityVisible;
+
+    private static Socket socket;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,6 +30,14 @@ public class App extends Application {
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
+    }
+
+    public static Socket getSocket() {
+        return socket;
+    }
+
+    public static void setSocket(Socket socket) {
+        App.socket = socket;
     }
 
     public static boolean isActivityVisible() {
