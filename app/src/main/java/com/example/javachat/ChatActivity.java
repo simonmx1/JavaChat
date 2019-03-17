@@ -9,9 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +29,7 @@ import java.util.ArrayList;
 
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
-public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh,
+public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, PopupMenu.OnMenuItemClickListener,
         ChatClientThread.Users {
     public static final String TAG = "Chat";
 
@@ -44,6 +47,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client = null;
     private TextView users;
 
+    private ArrayList<String> userList;
+
     private NotificationManagerCompat notifManager;
 
 
@@ -57,7 +62,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
 
         notifManager = NotificationManagerCompat.from(this);
-
 
 
         users = findViewById(R.id.t_users);
@@ -182,13 +186,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         view.setAdapter(adapter);
     }
 
-    @Deprecated
-    private void addText() {
-        chat.add(new Text("this is a test", "simons", false));
-        chat.add(new Text("this is not a test", "simons", false));
-        chat.add(new Text("this is a test lol", "you", true));
-        chat.add(new Text("this is a test", "felix", false));
-    }
 
 
     @Override
@@ -235,5 +232,26 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         super.onPause();
         App.activityPaused();
     }
+
+
+    public void showPopup(View v){
+        Log.i(TAG, "showPopup: ");
+        PopupMenu pop = new PopupMenu(this, v);
+        pop.setOnMenuItemClickListener(this);
+        pop.getMenu().clear();
+        for(String s: userList){
+            pop.getMenu().add(s);
+        }
+
+
+        pop.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
+    }
+
+
 
 }

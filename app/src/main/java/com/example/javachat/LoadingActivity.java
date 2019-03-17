@@ -52,7 +52,7 @@ public class LoadingActivity extends AppCompatActivity {
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                        throwError("Socket wrong");
+                        throwError("connection failed");
                     }finally {
                         finish();
                         timeout.interrupt();
