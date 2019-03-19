@@ -157,8 +157,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
                     new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this)
                             .start();
+
                 } catch (IOException e) {
                     Log.i("ERROR", e.getClass().getName() + ": " + e.getMessage());
+                } finally {
+                   ;
                 }
             }
         };
