@@ -60,6 +60,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        userList = new ArrayList<>();
 
         notifManager = NotificationManagerCompat.from(this);
 

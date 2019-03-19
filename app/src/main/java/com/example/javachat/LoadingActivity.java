@@ -91,5 +91,9 @@ public class LoadingActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        sockThread.interrupt();
+        super.onBackPressed();
+    }
 }
