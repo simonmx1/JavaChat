@@ -1,6 +1,7 @@
 package com.example.javachat;
 
 import android.app.Notification;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -26,6 +27,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
@@ -47,12 +50,10 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     private Socket client = null;
     private TextView users;
 
-    private ArrayList<String> userList;
-
     private NotificationManagerCompat notifManager;
 
-
-    //public static final String IP = "192.168.1.184";
+    public static final String IP = "192.168.1.121";
+    static ArrayList<String> online_users;
     public static final int PORT = 65535;
 
     @Override
@@ -60,10 +61,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        userList = new ArrayList<>();
-
         notifManager = NotificationManagerCompat.from(this);
-
 
         users = findViewById(R.id.t_users);
         users.setText(1 + " Users connected");
@@ -78,8 +76,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         //set user in toolbar
         TextView t_user = findViewById(R.id.t_user);
         t_user.setText(user);
-
-
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setRecyclerView();
@@ -152,9 +148,28 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
                     //get number of Users
                     if (firstMSG.startsWith("SERVER_INF:")) {
-                        onChange(Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1)));
-                    }
+                        onChange(Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1, firstMSG.lastIndexOf(':'))));
 
+                        if (Integer.parseInt(firstMSG.substring(firstMSG.indexOf(':') + 1, firstMSG.lastIndexOf(':'))) != 0) {
+
+                            firstMSG = firstMSG.substring(firstMSG.indexOf('[') + 1, firstMSG.indexOf(']'));
+
+                            online_users = new ArrayList<>(Arrays.asList(firstMSG.split(",")));
+                            Log.i("", firstMSG);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                online_users.replaceAll(String::trim);
+                                online_users.removeIf(String::isEmpty);
+                            } else {
+                                ArrayList<String> trimmed = new ArrayList<>();
+                                for (String s : online_users) {
+                                    s = s.trim();
+                                    if (!s.isEmpty())
+                                        trimmed.add(s);
+                                }
+                                online_users = trimmed;
+                            }
+                        }
+                    }
                     new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this)
                             .start();
 
@@ -243,7 +258,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         PopupMenu pop = new PopupMenu(this, v);
         pop.setOnMenuItemClickListener(this);
         pop.getMenu().clear();
-        for(String s: userList){
+        for(String s: online_users){
             pop.getMenu().add(s);
         }
 
@@ -256,6 +271,16 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         return false;
     }
 
-
+    public void onConnectionLost() {
+        Log.i("", "Connection lost");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Connection lost",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+        finish();
+    };
 
 }
