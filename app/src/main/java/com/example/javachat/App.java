@@ -21,14 +21,15 @@ public class App extends Application {
         createNotifChannels();
     }
 
-    private void createNotifChannels(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    private void createNotifChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(NOTIF_CHANNEL, "Notificatien",
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("notification");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            if (manager != null)
+                manager.createNotificationChannel(channel);
         }
     }
 
@@ -51,8 +52,6 @@ public class App extends Application {
     public static void activityPaused() {
         activityVisible = false;
     }
-
-
 
 
 }

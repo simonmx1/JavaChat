@@ -1,10 +1,5 @@
 package com.example.javachat;
 
-import android.app.Activity;
-import android.text.format.Time;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.SocketException;
@@ -14,10 +9,9 @@ public class ChatClientThread extends Thread {
 
     private BufferedReader in;
     private String user;
-    private ArrayList chat;
+    private ArrayList<Text> chat;
     private Refresh r;
     private Users u;
-    private Activity a;
 
     ChatClientThread(String user, BufferedReader in, ArrayList<Text> chat, Refresh r, Users u) {
         this.user = user;
@@ -25,7 +19,6 @@ public class ChatClientThread extends Thread {
         this.chat = chat;
         this.r = r;
         this.u = u;
-        this.a = a;
     }
 
     @Override
@@ -56,7 +49,7 @@ public class ChatClientThread extends Thread {
                 }
 
                 if (!this.user.equals(user)) {
-                    if (!(user.equals("Server Message") && msg.startsWith(this.user + ' '))) {
+                    if (user != null && !(user.equals("Server Message") && msg.startsWith(this.user + ' '))) {
                         Text text = new Text(msg, user, false);
                         chat.add(text);
                         r.onSend(text);

@@ -5,7 +5,6 @@ public class Timeout extends Thread {
     private int millis = 7000;
     private boolean timeout = false;
     private boolean timeout2 = false;
-    public boolean stopped = false;
 
     public Timeout(int millis) {
         this.millis = millis;
@@ -23,7 +22,7 @@ public class Timeout extends Thread {
                 e.printStackTrace();
             }
         }
-        stopped = true;
+        boolean stopped = true;
     }
 
     public void resetTimeout() {

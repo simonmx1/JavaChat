@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,12 +22,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
@@ -84,25 +80,22 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         field = findViewById(R.id.c_text);
 
         b_send = findViewById(R.id.c_send);
-        b_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String cont = field.getText().toString().trim();
-                if (!cont.matches("")) {
-                    chat.add(new Text(cont, "you", true));
-                    field.setText("");
-                    adapter.notifyItemInserted(chat.size());
-                    view.scrollToPosition(chat.size() - 1);
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            out.println(cont);
-                        }
-                    }.start();
+        b_send.setOnClickListener(v -> {
+            final String cont = field.getText().toString().trim();
+            if (!cont.matches("")) {
+                chat.add(new Text(cont, "you", true));
+                field.setText("");
+                adapter.notifyItemInserted(chat.size());
+                view.scrollToPosition(chat.size() - 1);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        out.println(cont);
+                    }
+                }.start();
 
-                } else {
-                    Log.i("", "false");
-                }
+            } else {
+                Log.i("", "false");
             }
         });
         t = new Thread() {
@@ -113,7 +106,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
                     client = App.getSocket();
 
-                    if(client == null){
+                    if (client == null) {
                         Log.i(TAG, "run: client null");
                         finish();
                     }
@@ -135,13 +128,8 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "Username unavailable",
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Username unavailable",
+                                    Toast.LENGTH_LONG).show());
                             finish();
                         }
                     }
@@ -175,8 +163,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
                 } catch (IOException e) {
                     Log.i("ERROR", e.getClass().getName() + ": " + e.getMessage());
-                } finally {
-                   ;
                 }
             }
         };
@@ -206,27 +192,20 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     }
 
 
-
     @Override
     public void onSend(final Text text) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                adapter.notifyItemInserted(chat.size());
-                view.scrollToPosition(chat.size() - 1);
-                if (!App.isActivityVisible())
-                    sendNotif(text);
-            }
+        runOnUiThread(() -> {
+            adapter.notifyItemInserted(chat.size());
+            view.scrollToPosition(chat.size() - 1);
+            if (!App.isActivityVisible())
+                sendNotif(text);
         });
 
     }
 
     @Override
     public void onChange(final int size) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                users.setText(size + " Users connected");
-            }
-        });
+        runOnUiThread(() -> users.setText(size + " Users connected"));
     }
 
     public void sendNotif(Text text) {
@@ -253,12 +232,12 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
     }
 
 
-    public void showPopup(View v){
+    public void showPopup(View v) {
         Log.i(TAG, "showPopup: ");
         PopupMenu pop = new PopupMenu(this, v);
         pop.setOnMenuItemClickListener(this);
         pop.getMenu().clear();
-        for(String s: online_users){
+        for (String s : online_users) {
             pop.getMenu().add(s);
         }
 
@@ -273,14 +252,11 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
 
     public void onConnectionLost() {
         Log.i("", "Connection lost");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Connection lost",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connection lost",
+                Toast.LENGTH_LONG).show());
         finish();
-    };
+    }
+
+    ;
 
 }

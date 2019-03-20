@@ -43,32 +43,26 @@ public class LoadingActivity extends AppCompatActivity {
         try {
             final InetAddress ipa = Inet4Address.getByName(ip);
             //App.setSocket(new Socket(ipa, ChatActivity.PORT));
-            sockThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        App.setSocket(new Socket(ipa, ChatActivity.PORT));
-                        startActivity(inte);
+            sockThread = new Thread(() -> {
+                try {
+                    App.setSocket(new Socket(ipa, ChatActivity.PORT));
+                    startActivity(inte);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throwError("connection failed");
-                    }finally {
-                        finish();
-                        timeout.interrupt();
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throwError("connection failed");
+                } finally {
+                    finish();
+                    timeout.interrupt();
                 }
             });
-            timeout = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(5000);
-                        throwError("Timeout");
-                        finish();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            timeout = new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    throwError("Timeout");
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             });
             timeout.start();
@@ -82,13 +76,8 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
 
-    private void throwError(final String msg){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void throwError(final String msg) {
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show());
     }
 
     @Override

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Text> chat;
 
@@ -24,7 +24,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView text;
         public TextView user;
 
@@ -37,8 +37,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
 
     }
 
-
-    public ChatAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public ChatAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.chat_item, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
@@ -51,11 +51,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
         //Log.d(" ","called");
         Text t = chat.get(i);
 
-        if(t.isYou()){
+        if (t.isYou()) {
             //Log.i("", "onBindViewHolder: " + t.getUser()+ " is You!!");
             holder.user.setGravity(Gravity.RIGHT);
             holder.text.setGravity(Gravity.RIGHT);
-        }else{
+        } else {
             holder.user.setGravity(Gravity.LEFT);
             holder.text.setGravity(Gravity.LEFT);
         }

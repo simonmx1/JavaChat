@@ -21,18 +21,15 @@ public class MainActivity extends AppCompatActivity {
         final TextView u = findViewById(R.id.m_user);
         final TextView i = findViewById(R.id.m_ip);
         final Button b_c = findViewById(R.id.m_join);
-        b_c.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
-                if(!i.getText().toString().matches(""))
-                    intent.putExtra("ip", i.getText().toString());
-                if(!u.getText().toString().matches("")) {
-                    intent.putExtra("user", u.getText().toString());
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(getApplicationContext(), "Enter username", Toast.LENGTH_LONG).show();
-                }
+        b_c.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
+            if (!i.getText().toString().matches(""))
+                intent.putExtra("ip", i.getText().toString());
+            if (!u.getText().toString().matches("")) {
+                intent.putExtra("user", u.getText().toString());
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "Enter username", Toast.LENGTH_LONG).show();
             }
         });
     }
