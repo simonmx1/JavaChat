@@ -31,6 +31,8 @@ public class ChatClientThread extends Thread {
                 System.out.println(line);
                 if (line == null)
                     break;
+                if (line.equals("SERVER_OFF"))
+                    break;
                 if (!Character.isAlphabetic(line.charAt(0))) {
 
                     user = "Server Message";
@@ -56,7 +58,6 @@ public class ChatClientThread extends Thread {
                     }
                 }
             }
-            System.out.print("IN = NULLLLLLLLLLLLLLL");
         } catch (SocketException e) {
             System.out.print("gali");
         } catch (IOException e) {
