@@ -29,7 +29,7 @@ import java.util.Arrays;
 import static com.example.javachat.App.NOTIF_CHANNEL;
 
 public class ChatActivity extends AppCompatActivity implements ChatClientThread.Refresh, PopupMenu.OnMenuItemClickListener,
-        ChatClientThread.Users {
+        ChatClientThread.Users, ChatClientThread.Finish{
     public static final String TAG = "Chat";
 
 
@@ -158,7 +158,7 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
                             }
                         }
                     }
-                    new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this)
+                    new ChatClientThread(user, in, chat, ChatActivity.this, ChatActivity.this, ChatActivity.this)
                             .start();
 
                 } catch (IOException e) {
@@ -240,8 +240,6 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         for (String s : online_users) {
             pop.getMenu().add(s);
         }
-
-
         pop.show();
     }
 
@@ -257,6 +255,18 @@ public class ChatActivity extends AppCompatActivity implements ChatClientThread.
         finish();
     }
 
-    ;
+    @Override
+    public void onFinish() {
+        runOnUiThread(() -> {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        finish();
+    }
+
+
 
 }

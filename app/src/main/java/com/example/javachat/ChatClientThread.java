@@ -1,9 +1,13 @@
 package com.example.javachat;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
+
+import static com.example.javachat.ChatActivity.TAG;
 
 public class ChatClientThread extends Thread {
 
@@ -12,13 +16,15 @@ public class ChatClientThread extends Thread {
     private ArrayList<Text> chat;
     private Refresh r;
     private Users u;
+    private Finish f;
 
-    ChatClientThread(String user, BufferedReader in, ArrayList<Text> chat, Refresh r, Users u) {
+    ChatClientThread(String user, BufferedReader in, ArrayList<Text> chat, Refresh r, Users u, Finish f) {
         this.user = user;
         this.in = in;
         this.chat = chat;
         this.r = r;
         this.u = u;
+        this.f = f;
     }
 
     @Override
@@ -31,8 +37,11 @@ public class ChatClientThread extends Thread {
                 System.out.println(line);
                 if (line == null)
                     break;
-                if (line.equals("SERVER_OFF"))
+                if (line.equals("SERVER_OFF")){
+                    Log.i(TAG, "run:   server off");
+                    f.onFinish();
                     break;
+                }
                 if (!Character.isAlphabetic(line.charAt(0))) {
 
                     user = "Server Message";
@@ -67,6 +76,10 @@ public class ChatClientThread extends Thread {
 
     public interface Refresh {
         void onSend(Text text);
+    }
+
+    public interface Finish {
+        void onFinish();
     }
 
     public interface Users {
